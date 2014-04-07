@@ -1,0 +1,8 @@
+#!/usr/bin/env ruby
+
+require 'uptimer'
+
+monitor = Uptimer::Monitor.new('http://yuri.im', 3)
+
+monitor.email = 'yuri.goncharenko@gmail.com'
+monitor.start
