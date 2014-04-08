@@ -1,29 +1,33 @@
 # Uptimer
 
-TODO: Write a gem description
 
 ## Installation
 
-Add this line to your application's Gemfile:
+  `git clone https://github.com/yuri-g/uptimer.git`
 
-    gem 'uptimer'
+  `cd uptimer`
 
-And then execute:
+  `bundle`
 
-    $ bundle
+  Change the `notifier_email` and `notifier_password` in `config/config.yml`
+to use different mail account to notify user. Also, change the `nexmo_key`
+and `nexmo_secret` if you have a Nexmo account. 
 
-Or install it yourself as:
+  And then:
 
-    $ gem install uptimer
+  `rake install`
 
 ## Usage
 
-TODO: Write usage instructions here
+  `uptimer <website url> <number of tries before consider site down>
+<user email> [phone number]`
 
-## Contributing
+  For example: 
 
-1. Fork it ( https://github.com/[my-github-username]/uptimer/fork )
-2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create a new Pull Request
+  `uptimer http://google.com 3 mail@mail.com`
+  
+  Or:
+
+  `uptimer http://google.com 3 mail@mail.com 9999999`
+
+  Phone number is optional.

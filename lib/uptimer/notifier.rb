@@ -18,6 +18,5 @@ module Uptimer
         @nexmo_client.send_message(to: number, from: 'rbuptimemonitor', text: message)
       end
     end
-
   end
 end

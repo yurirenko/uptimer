@@ -50,8 +50,8 @@ module Uptimer
           response = check_status
           if @notified == false
             Uptimer::Notifier.send_mail({ site: @url,
-                                        code: "#{response[:code]} #{response[:desc]}",
-                                        status: 'down.' }, @email)
+                                          code: "#{response[:code]} #{response[:desc]}",
+                                          status: 'down.' }, @email)
             puts @number.class
             Uptimer::Notifier.send_sms("Site #{@url} is down. Reason: #{response[:desc]} #{response[:code]}",
                                        @number) if @number

@@ -29,6 +29,5 @@ RSpec.configure do |config|
     delivery_method :test
   end
 
-  JSON_OBJECT = {:body => /\{".+?":".+?"(,".+?":".+?")+\}/, :headers => {'Content-Type' => 'application/json'}}
-  EXAMPLE_MESSAGE = {:from => 'ruby', :to => 9999999, :text => 'Hey!'}
+  JSON_OBJECT = { body: /\{".+?":".+?"(,".+?":".+?")+\}/, headers: { 'Content-Type' => 'application/json' } }
 end

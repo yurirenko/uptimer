@@ -71,8 +71,8 @@ describe 'Uptime Monitor' do
 
     before(:each) do
       @monitor.number = 999999
-      @monitor.email = "test@test.com"
-      Uptimer::Notifier.nexmo_client = Nexmo::Client.new('test','test')
+      @monitor.email = 'test@test.com'
+      Uptimer::Notifier.nexmo_client = Nexmo::Client.new('test', 'test')
       @stub_sms = stub_request(:post, 'https://rest.nexmo.com/sms/json').with(JSON_OBJECT)
         .to_return(status: 200, body: 'json:json')
     end
