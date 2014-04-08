@@ -1,6 +1,10 @@
 require 'spec_helper'
 
 describe 'Uptime Monitor' do
+  # silence puts
+  before do
+    Uptimer::Monitor.any_instance.stub(:puts)
+  end
   it 'should be able to get http response code' do
     stub = stub_request(:get, TEST_URL).to_return(status: 200)
     monitor = Uptimer::Monitor.new(TEST_URL)
@@ -36,5 +40,34 @@ describe 'Uptime Monitor' do
     status = monitor.reachable?
     stub.should have_been_made.times(10)
     status.should eq(true)
+  end
+
+  it 'should notify user when site is unreachable' do
+    number_of_tries = 3
+    stub_request(:get, TEST_URL)
+      .to_return(status: 500).times(number_of_tries)
+    monitor = Uptimer::Monitor.new(TEST_URL, number_of_tries)
+    monitor.email = 'test@test.com'
+    thread = Thread.new do
+      monitor.start
+    end
+    sleep(1)
+    thread.kill
+    should have_sent_email.to('test@test.com')
+    Mail::TestMailer.deliveries.clear
+  end
+
+  it 'should notify user when site becomes reachable' do
+    stub_request(:get, TEST_URL)
+      .to_return(status: 200)
+    monitor = Uptimer::Monitor.new(TEST_URL, 3)
+    monitor.email = 'test@test.com'
+    monitor.notified = true
+    thread = Thread.new do
+      monitor.start
+    end
+    sleep(1)
+    thread.kill
+    should have_sent_email.to('test@test.com').with_subject("Website #{TEST_URL} is up.")
   end
 end

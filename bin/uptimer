@@ -1,8 +1,16 @@
 #!/usr/bin/env ruby
-
 require 'uptimer'
+require 'optparse'
+require 'yaml'
 
-monitor = Uptimer::Monitor.new('http://yuri.im', 3)
+if ARGV.size < 3
+  puts 'Missing arguments'
+  exit(1)
+end
 
-monitor.email = 'yuri.goncharenko@gmail.com'
-monitor.start
+monitor = Uptimer::Monitor.new(ARGV[0], ARGV[1].to_i)
+monitor.email = ARGV[2]
+
+begin
+  monitor.start
+rescue Interrupt then end

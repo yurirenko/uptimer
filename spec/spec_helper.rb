@@ -9,6 +9,7 @@ require 'uptimer'
 require 'webmock/rspec'
 
 RSpec.configure do |config|
+  include Mail::Matchers
   config.treat_symbols_as_metadata_keys_with_true_values = true
   config.run_all_when_everything_filtered = true
   config.filter_run :focus
@@ -22,4 +23,8 @@ RSpec.configure do |config|
   WebMock.disable_net_connect!(allow_localhost: true)
 
   TEST_URL = 'http://test.com'
+
+  Mail.defaults do
+    delivery_method :test
+  end
 end

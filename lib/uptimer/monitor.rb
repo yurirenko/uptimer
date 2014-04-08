@@ -27,11 +27,13 @@ module Uptimer
     def reachable?
       @number_of_tries.times do
         status = check_status
+        puts "Response from #{@url}: #{status}"
         unless status.nil? || (400..599).include?(status) || status.is_a?(String)
           @reachable = true
           return true
         end
       end
+      puts "#{@number_of_tries} consecutive tries, #{@url} is unreachable"
       @reachable = false
       false
     end
@@ -51,7 +53,7 @@ module Uptimer
             @notified = false
           end
         end
-        sleep(10)
+        sleep(5)
       end
     end
   end
