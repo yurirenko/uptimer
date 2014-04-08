@@ -49,12 +49,14 @@ module Uptimer
         if @reachable == false
           response = check_status
           if @notified == false
-            Uptimer::Mailer.send_mail({ site: @url, code: "#{response[:code]} #{response[:desc]}" , status: 'down.' }, @email)
+            Uptimer::Notifier.send_mail({ site: @url,
+                                        code: "#{response[:code]} #{response[:desc]}",
+                                        status: 'down.' }, @email)
             @notified = true
           end
         else
           if @notified == true
-            Uptimer::Mailer.send_mail({ site: @url, status: 'up.' }, @email)
+            Uptimer::Notifier.send_mail({ site: @url, status: 'up.' }, @email)
             @notified = false
           end
         end

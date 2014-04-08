@@ -42,7 +42,7 @@ describe 'Uptime Monitor' do
     status.should eq(true)
   end
 
-  it 'should notify user when site is unreachable' do
+  it 'should notify user via email when site is unreachable' do
     number_of_tries = 3
     stub_request(:get, TEST_URL)
       .to_return(status: 500).times(number_of_tries)
@@ -57,7 +57,7 @@ describe 'Uptime Monitor' do
     Mail::TestMailer.deliveries.clear
   end
 
-  it 'should notify user when site becomes reachable' do
+  it 'should notify user via email when site becomes reachable' do
     stub_request(:get, TEST_URL)
       .to_return(status: 200)
     monitor = Uptimer::Monitor.new(TEST_URL, 3)
@@ -70,4 +70,8 @@ describe 'Uptime Monitor' do
     thread.kill
     should have_sent_email.to('test@test.com').with_subject("Website #{TEST_URL} is up.")
   end
+
+  
+
+
 end

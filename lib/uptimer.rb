@@ -1,12 +1,12 @@
 require 'uptimer/version'
-require 'uptimer/mailer'
+require 'uptimer/notifier'
 require 'uptimer/monitor'
 require 'net/http'
 require 'mail'
 require 'yaml'
 
 module Uptimer
-  conf = YAML.load_file(File.join(File.dirname(__FILE__), "../config/config.yml"))
+  conf = YAML.load_file(File.join(File.dirname(__FILE__), '../config/config.yml'))
   Mail.defaults do
     delivery_method :smtp, {
       address: 'smtp.gmail.com',
