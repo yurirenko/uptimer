@@ -1,2 +1,4 @@
 notifier_email: ruby.uptimereporter@gmail.com
 notifier_password: rubyuptimereporter
+nexmo_key: 546a8f70
+nexmo_secret: a8985cdf

@@ -3,6 +3,7 @@ require 'spec_helper'
 describe 'Uptime Monitor' do
   # silence puts
   before do
+    Uptimer::Notifier.any_instance.stub(:puts)
     Uptimer::Monitor.any_instance.stub(:puts)
   end
   it 'should be able to get http response code' do
@@ -71,7 +72,39 @@ describe 'Uptime Monitor' do
     should have_sent_email.to('test@test.com').with_subject("Website #{TEST_URL} is up.")
   end
 
-  
+  it 'should notify user with sms when site is unreachable' do
+    number_of_tries = 3
+    monitor = Uptimer::Monitor.new(TEST_URL, 3)
+    monitor.number = 999999
+    monitor.email = "test@test.com"
+    Uptimer::Notifier.nexmo_client = Nexmo::Client.new('test','test')
+    stub_sms = stub_request(:post, 'https://rest.nexmo.com/sms/json').with(JSON_OBJECT)
+                          .to_return(status: 200, body: 'json:json')
+    stub_request(:get, TEST_URL)
+      .to_return(status: 500).times(number_of_tries)
+    thread = Thread.new do
+      monitor.start
+    end
+    sleep(1)
+    thread.kill
+    stub_sms.should have_been_requested
+  end
 
-
+  it 'should notify user with sms when site becomes reachable' do
+    stub_request(:get, TEST_URL)
+      .to_return(status: 200)
+    monitor = Uptimer::Monitor.new(TEST_URL, 3)
+    monitor.email = 'test@test.com'
+    monitor.number = 999999
+    monitor.notified = true
+    Uptimer::Notifier.nexmo_client = Nexmo::Client.new('test','test')
+    stub_sms = stub_request(:post, 'https://rest.nexmo.com/sms/json').with(JSON_OBJECT)
+                          .to_return(status: 200, body: 'json:json')
+    thread = Thread.new do
+      monitor.start
+    end
+    sleep(1)
+    thread.kill
+    stub_sms.should have_been_requested
+  end
 end

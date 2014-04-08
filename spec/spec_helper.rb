@@ -7,6 +7,7 @@
 
 require 'uptimer'
 require 'webmock/rspec'
+require 'json'
 
 RSpec.configure do |config|
   include Mail::Matchers
@@ -27,4 +28,7 @@ RSpec.configure do |config|
   Mail.defaults do
     delivery_method :test
   end
+
+  JSON_OBJECT = {:body => /\{".+?":".+?"(,".+?":".+?")+\}/, :headers => {'Content-Type' => 'application/json'}}
+  EXAMPLE_MESSAGE = {:from => 'ruby', :to => 9999999, :text => 'Hey!'}
 end

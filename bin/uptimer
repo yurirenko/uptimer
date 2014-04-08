@@ -10,6 +10,7 @@ end
 
 monitor = Uptimer::Monitor.new(ARGV[0], ARGV[1].to_i)
 monitor.email = ARGV[2]
+monitor.number = ARGV[3]
 begin
   monitor.start
 rescue Interrupt then end

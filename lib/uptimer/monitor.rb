@@ -1,7 +1,7 @@
 module Uptimer
   class Monitor
     attr_accessor :reachable, :url, :number_of_tries,
-                  :email, :notified
+                  :email, :notified, :number
 
     def initialize(url, number_of_tries = 3)
       @number_of_tries = number_of_tries
@@ -52,11 +52,15 @@ module Uptimer
             Uptimer::Notifier.send_mail({ site: @url,
                                         code: "#{response[:code]} #{response[:desc]}",
                                         status: 'down.' }, @email)
+            puts @number.class
+            Uptimer::Notifier.send_sms("Site #{@url} is down. Reason: #{response[:desc]} #{response[:code]}",
+                                       @number) if @number
             @notified = true
           end
         else
           if @notified == true
             Uptimer::Notifier.send_mail({ site: @url, status: 'up.' }, @email)
+            Uptimer::Notifier.send_sms("Site #{@url} is up again!", @number) if @number
             @notified = false
           end
         end
