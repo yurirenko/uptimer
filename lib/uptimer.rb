@@ -11,8 +11,8 @@ module Uptimer
     delivery_method :smtp, {
       address: 'smtp.gmail.com',
       port: '587',
-      user_name: conf[:notifier_email],
-      password: conf[:notifier_password],
+      user_name: conf['notifier_email'],
+      password: conf['notifier_password'],
       authentication: :plain,
       enable_starttls_auto: true
     }

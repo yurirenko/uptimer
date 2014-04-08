@@ -10,7 +10,7 @@ describe 'Uptime Monitor' do
     monitor = Uptimer::Monitor.new(TEST_URL)
     status = monitor.check_status
     stub.should have_been_requested
-    status.should eq(200)
+    status[:code].should eq(200)
   end
 
   it 'should be able to recognize that site is unreachable' do

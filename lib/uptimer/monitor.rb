@@ -12,23 +12,28 @@ module Uptimer
 
     def check_status
       uri = URI(@url)
+      response = {}
       begin
-        response = Net::HTTP.get_response(uri).code.to_i
+        response[:code] = Net::HTTP.get_response(uri).code.to_i
+        response[:status] = (400..599).include?(response[:code]) ? :failure : :ok
       rescue Timeout::Error
-        return 'Timeout Error'
+        response[:status] = :failure
+        response[:desc] = 'Timeout Error'
       rescue SocketError
-        return 'Socket error'
+        response[:status] = :failure
+        response[:desc] = 'Socket Error'
       rescue Errno::ECONNREFUSED
-        return 'Connection refused'
+        response[:status] = :failure
+        response[:desc] = 'Connection Refused'
       end
       response
     end
 
     def reachable?
       @number_of_tries.times do
-        status = check_status
-        puts "Response from #{@url}: #{status}"
-        unless status.nil? || (400..599).include?(status) || status.is_a?(String)
+        response = check_status
+        puts "Response from #{@url}: #{response[:code]} #{response[:desc]}"
+        unless response[:status] == :failure
           @reachable = true
           return true
         end
@@ -42,9 +47,9 @@ module Uptimer
       loop do
         reachable?
         if @reachable == false
-          code = check_status
+          response = check_status
           if @notified == false
-            Uptimer::Mailer.send_mail({ site: @url, code: code, status: 'down.' }, @email)
+            Uptimer::Mailer.send_mail({ site: @url, code: "#{response[:code]} #{response[:desc]}" , status: 'down.' }, @email)
             @notified = true
           end
         else
